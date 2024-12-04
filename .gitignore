@@ -1,0 +1,64 @@
+# Compiled object files, libraries, executables, etc.
+bin/
+obj/
+*.dll
+*.exe
+*.log
+*.pdb
+*.cache
+*.temp
+*.tmp
+*.csproj.user
+
+# Rider-specific files
+.idea/
+*.sln.iml
+*.dotsettings
+.idea_modules/
+
+# Build directories
+artifacts/
+.publish/
+*.vs/
+.vscode/
+ReSharperReports/
+
+# User-specific files
+*.user
+*.lock.json
+*.suo
+*.userprefs
+*.orig
+*.bak
+
+# Backup & transient files
+*.swp
+*.swm
+*.swo
+*.~*
+
+# Dependency directories
+packages/
+node_modules/
+
+# Logs
+*.log
+
+# Database and data files
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore files with secrets
+appsettings.json
+appsettings.*.json
+
+# IDE-specific settings
+.vscode/
+.resharper/
+project.lock.json
