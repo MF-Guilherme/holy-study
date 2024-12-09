@@ -1,0 +1,29 @@
+@model IEnumerable<Theme>
+
+<h1>Temas</h1>
+
+<div>
+    <button onclick="location.href='@Url.Action("Create", "Themes")'">Criar Novo Tema</button>
+</div>
+
+<div>
+    <input type="text" id="search" placeholder="Buscar tema..." oninput="filterThemes()" />
+    <ul id="theme-list">
+        @foreach (var theme in Model.OrderBy(t => t.Name))
+        {
+            <li>
+                <a href="@Url.Action("Details", "Themes", new { id = theme.Id })">@theme.Name</a>
+            </li>
+        }
+    </ul>
+</div>
+
+<h2>Favoritos</h2>
+<div>
+    @foreach (var theme in Model.Where(t => t.IsFavorite))
+    {
+        <button onclick="location.href='@Url.Action("Details", "Themes", new { id = theme.Id })'">
+            @theme.Name
+        </button>
+    }
+</div>

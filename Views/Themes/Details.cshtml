@@ -1,0 +1,84 @@
+@model HolyStudy.Models.Theme
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>@Model.Name</h1>
+
+<div>
+    <h2>Adicionar Passagem</h2>
+    <form asp-action="AddPassage" method="post" class="row row-cols-lg-auto g-3 align-items-center">
+        <input type="hidden" name="ThemeId" value="@Model.Id" />
+        <div class="col-sm">
+            <label for="BookId">Livro</label>
+            <select class="form-select" name="BookId" id="BookId">
+                <option value="" selected>Selecione o livro</option>
+                @foreach (var book in ViewBag.Books)
+                {
+                    <option value="@book.Id">@book.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-sm">
+            <label for="Chapter">Capítulo</label>
+            <input type="number" class="form-control" id="Chapter" name="Chapter" required/>
+        </div>
+        <div class="col-sm">
+            <label for="StartVerse">Versículo Inicial</label>
+            <input type="number" class="form-control" id="StartVerse" name="StartVerse" required/>
+        </div>
+        <div class="col-sm">
+            <label for="EndVerse">Versículo Final (opcional)</label>
+            <input type="number" class="form-control" id="EndVerse" name="EndVerse">
+        </div>
+        <div class="col-sm">
+            <label for="Description">Descrição (opcional)</label>
+            <textarea class="form-control" id="Description" name="Description"></textarea>
+        </div>
+        <div class="col-sm">
+            <button type="submit" class="btn btn-primary">Adicionar</button>
+        </div>
+    </form>
+</div>
+
+<hr />
+
+<div>
+    <h2>Passagens Relacionadas</h2>
+    @if (Model.Passages != null && Model.Passages.Any())
+    {
+        <table>
+            <thead>
+            <tr>
+                <th>Livro</th>
+                <th>Capítulo</th>
+                <th>Versículos</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var passage in Model.Passages)
+            {
+                <tr>
+                    <td>@passage.Book.Name</td>
+                    <td>@passage.Chapter</td>
+                    <td>@passage.StartVerse - @passage.EndVerse</td>
+                    <td>@passage.Description</td>
+                    <td>
+                        <form asp-action="DeletePassage" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@passage.Id" />
+                            <button type="submit">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Não há passagens cadastradas para este tema.</p>
+    }
+</div>

@@ -1,0 +1,43 @@
+@model Theme
+
+<h1>Criar Tema</h1>
+
+<form asp-action="Create" method="post">
+    <label for="Name">Nome do Tema</label>
+    <input asp-for="Name" id="Name" required />
+    <button type="submit">Salvar Tema</button>
+</form>
+
+@if (Model?.Id != 0)
+{
+    <h2>Cadastrar Passagens para o Tema: @Model.Name</h2>
+    <form asp-action="AddPassage" method="post">
+        <input type="hidden" name="ThemeId" value="@Model.Id" />
+        <div>
+            <label for="Book">Livro</label>
+            <select name="Book" id="Book">
+                @foreach (var book in ViewBag.Books)
+                {
+                    <option value="@book.Id">@book.Name</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label for="Chapter">Capítulo</label>
+            <input type="number" name="Chapter" id="Chapter" required />
+        </div>
+        <div>
+            <label for="VerseStart">Versículo Inicial</label>
+            <input type="number" name="VerseStart" />
+        </div>
+        <div>
+            <label for="VerseEnd">Versículo Final</label>
+            <input type="number" name="VerseEnd" />
+        </div>
+        <div>
+            <label for="Description">Descrição</label>
+            <textarea name="Description" id="Description"></textarea>
+        </div>
+        <button type="submit">Adicionar Passagem</button>
+    </form>
+}
