@@ -10,5 +10,7 @@ public class Theme
     [MaxLength(150)]
     public string Name { get; set; }
     
+    public bool IsFavorite { get; set; }
+    
     public ICollection<Passage> Passages { get; set; } = new List<Passage>();
 }
