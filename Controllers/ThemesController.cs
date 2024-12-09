@@ -51,8 +51,6 @@ public class ThemesController : Controller
 // Página de criação de tema (GET)
     public IActionResult Create()
     {
-        // Prepara os livros para exibição no dropdown
-        ViewBag.Books = _context.Books.OrderBy(b => b.Name).ToList();
         return View(new Theme());
     }
 
@@ -66,11 +64,7 @@ public class ThemesController : Controller
             _context.Themes.Add(theme);
             await _context.SaveChangesAsync();
 
-            // Prepara os livros para exibição no dropdown
-            ViewBag.Books = _context.Books.OrderBy(b => b.Id).ToList();
-
-            // Retorna a mesma view com o modelo atualizado
-            return View(theme);
+            return RedirectToAction(nameof(Details), new { id = theme.Id });
         }
 
         // Caso a validação falhe, recarrega a página
