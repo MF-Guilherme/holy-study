@@ -63,7 +63,8 @@ public class ThemesController : Controller
         {
             _context.Themes.Add(theme);
             await _context.SaveChangesAsync();
-
+            TempData["Message"] = "Tema criado com sucesso!";
+            TempData["MessageType"] = "success";
             return RedirectToAction(nameof(Details), new { id = theme.Id });
         }
 
@@ -81,6 +82,8 @@ public class ThemesController : Controller
         {
             _context.Passages.Add(passage);
             await _context.SaveChangesAsync();
+            TempData["Message"] = "Passagem adicionada com sucesso!";
+            TempData["MessageType"] = "success";
             return RedirectToAction(nameof(Details), new { id = passage.ThemeId });
         }
 
@@ -110,8 +113,12 @@ public class ThemesController : Controller
         {
             _context.Passages.Remove(passage);
             await _context.SaveChangesAsync();
+            TempData["Message"] = "Passagem excluída com sucesso!";
+            TempData["MessageType"] = "success";
+            return RedirectToAction(nameof(Details), new { id = passage.ThemeId });
+
         }
-        return RedirectToAction(nameof(Details), new { id = passage.ThemeId });
+        return NotFound();
     }
     
     // GET: Exibir página de edição
@@ -142,7 +149,8 @@ public class ThemesController : Controller
             {
                 _context.Passages.Update(passage);
                 await _context.SaveChangesAsync();
-
+                TempData["Message"] = "Passagem editada com sucesso!";
+                TempData["MessageType"] = "success";
                 // Redireciona de volta para a página de detalhes do tema
                 return RedirectToAction(nameof(Details), new { id = passage.ThemeId });
             }

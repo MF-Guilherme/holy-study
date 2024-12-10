@@ -22,6 +22,15 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["Message"] != null)
+            {
+                var messageType = TempData["MessageType"] ?? "info";
+                <div class="alert alert-@messageType fade show auto-dismiss" role="alert">
+                    @TempData["Message"]
+                </div>
+            }
+
+
             @RenderBody()
         </main>
     </div>
@@ -35,5 +44,20 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        // Aguarda a renderização completa
+        document.addEventListener("DOMContentLoaded", function () {
+            // Seleciona todos os alertas com a classe 'auto-dismiss'
+            const alerts = document.querySelectorAll('.alert.auto-dismiss');
+            alerts.forEach(alert => {
+                // Remove o alerta após 2 segundos
+                setTimeout(() => {
+                    alert.classList.remove('show'); // Esconde gradualmente
+                    setTimeout(() => alert.remove(), 500); // Remove do DOM após o fade
+                }, 2000);
+            });
+        });
+    </script>
+
 </body>
 </html>
