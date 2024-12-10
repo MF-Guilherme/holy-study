@@ -1,0 +1,39 @@
+@model HolyStudy.Models.Passage
+
+<h2>Editar Passagem</h2>
+
+<form asp-action="EditPassage" method="post" class="row row-cols-lg-auto g-3 align-items-center">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <input type="hidden" name="ThemeId" value="@Model.ThemeId" />
+
+    <div class="col-sm">
+        <label for="BookId">Livro</label>
+        @Html.DropDownListFor(
+            model => model.BookId,
+            new SelectList(ViewBag.Books, "Id", "Name", Model.BookId),
+            "Selecione o livro",
+            new { @class = "form-select", @id = "BookId", required = "required" }
+        )
+
+    </div>
+    <div class="col-sm">
+        <label for="Chapter">Capítulo</label>
+        <input type="number" class="form-control" name="Chapter" id="Chapter" value="@Model.Chapter" required />
+    </div>
+    <div class="col-sm">
+        <label for="StartVerse">Versículo Inicial</label>
+        <input type="number" class="form-control" name="StartVerse" id="StartVerse" value="@Model.StartVerse" required />
+    </div>
+    <div class="col-sm">
+        <label for="EndVerse">Versículo Final</label>
+        <input type="number" class="form-control" name="EndVerse" id="EndVerse" value="@Model.EndVerse" />
+    </div>
+    <div class="col-sm">
+        <label for="Description">Descrição</label>
+        <textarea name="Description" class="form-control" id="Description">@Model.Description</textarea>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Atualizar</button>
+        <a asp-action="Details" asp-route-id="@Model.ThemeId" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
