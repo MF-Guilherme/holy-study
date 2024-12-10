@@ -1,0 +1,9 @@
+@model Theme
+
+<h1>Criar Tema</h1>
+
+<form asp-action="Create" method="post">
+    <label for="Name">Nome do Tema</label>
+    <input asp-for="Name" id="Name" required />
+    <button type="submit">Salvar Tema</button>
+</form>
