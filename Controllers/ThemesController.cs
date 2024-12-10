@@ -113,4 +113,52 @@ public class ThemesController : Controller
         }
         return RedirectToAction(nameof(Details), new { id = passage.ThemeId });
     }
+    
+    // GET: Exibir página de edição
+    public async Task<IActionResult> EditPassage(int id)
+    {
+        var passage = await _context.Passages
+            .Include(p => p.Book)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (passage == null)
+        {
+            return NotFound();
+        }
+
+        // Carrega os livros para o dropdown
+        ViewBag.Books = await _context.Books.OrderBy(b => b.Id).ToListAsync();
+        return View(passage);
+    }
+
+    // POST: Atualizar a passagem
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditPassage(Passage passage)
+    {
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                _context.Passages.Update(passage);
+                await _context.SaveChangesAsync();
+
+                // Redireciona de volta para a página de detalhes do tema
+                return RedirectToAction(nameof(Details), new { id = passage.ThemeId });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Passages.Any(p => p.Id == passage.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+        }
+
+        // Caso haja erro, recarrega a página com os dados necessários
+        ViewBag.Books = await _context.Books.OrderBy(b => b.Id).ToListAsync();
+        return View(passage);
+    }
+
 }
