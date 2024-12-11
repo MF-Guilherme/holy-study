@@ -41,3 +41,27 @@ body {
   display: inline-block;
   vertical-align: middle; /* Centraliza verticalmente */
 }
+
+/* Ajusta a largura da coluna de descrição */
+.description-column {
+  max-width: 200px; /* Aumente conforme necessário */
+  min-width: 150px;
+  text-align: justify;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+/* Centraliza os botões de ação na célula */
+.action-buttons {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Alinha verticalmente */
+  gap: 10px; /* Espaçamento entre os botões */
+}
+
+/* Evita quebra desnecessária para botões pequenos */
+.action-buttons a,
+.action-buttons button {
+  flex-shrink: 0;
+}
+
