@@ -33,3 +33,11 @@ body {
   margin-bottom: 60px;
   background-color: #f1f4f6;
 }
+
+
+.navbar-logo {
+  height: 70px; /* Ajuste a altura para um valor menor */
+  width: 100px;  /* Mantém a proporção da imagem */
+  display: inline-block;
+  vertical-align: middle; /* Centraliza verticalmente */
+}
