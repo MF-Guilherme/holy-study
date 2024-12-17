@@ -7,7 +7,8 @@
 <div class="container text-center mb-5">
     <div class="d-flex justify-content-center align-items-baseline gap-3">
         <h1 class="m-0">@Model.Name</h1>
-        <a href="#" style="text-decoration: none;">
+        <a href="@Url.Action("EditTheme", "Themes", new { id = Model.Id })"
+           style="text-decoration: none;">
             <i class="fa-regular fa-pen-to-square" style="color: #006EFF; font-size: 1rem;"></i>
         </a>
         <a href="#" style="text-decoration: none;"
@@ -169,7 +170,6 @@
     }
 </script>
 
-
 <script>
   function setDeleteId(id) {
     const deleteForm = document.getElementById('deleteThemeForm');
@@ -178,3 +178,5 @@
     deleteForm.action = `/Themes/DeleteTheme/${id}`; // Define a rota para o formulário
   }
 </script>
+
+

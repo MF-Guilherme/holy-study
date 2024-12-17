@@ -121,17 +121,20 @@ public class ThemesController : Controller
         return NotFound();
     }
 
+    [HttpGet]
     public async Task<IActionResult> EditTheme(int id)
     {
-        var theme = await _context.Themes.FindAsync(id);
+        // Busca o tema pelo ID no banco de dados
+        var theme = await _context.Themes
+            .FirstOrDefaultAsync(t => t.Id == id);
 
         if (theme == null)
         {
-            return NotFound(); 
+            return NotFound(new { message = "Tema não encontrado" });
         }
         return View(theme);
     }
-
+    
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditTheme(int id, Theme theme)
@@ -144,12 +147,12 @@ public class ThemesController : Controller
         {
             try
             {
-                _context.Attach(theme).State = EntityState.Modified;
+                _context.Update(theme);
                 await _context.SaveChangesAsync();
                 TempData["Message"] = "Tema editado com sucesso!";
                 TempData["MessageType"] = "success";
                 // Redireciona de volta para a página de detalhes do tema
-                return RedirectToAction(nameof(Details), new { id = theme.Id });
+                return RedirectToAction("Details", new { id = theme.Id });
             }
             catch (DbUpdateConcurrencyException)
             {
