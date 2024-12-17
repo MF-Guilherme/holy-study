@@ -3,7 +3,10 @@
 <h1>Criar Tema</h1>
 
 <form asp-action="Create" method="post">
-    <label for="Name">Nome do Tema</label>
-    <input asp-for="Name" id="Name" required />
-    <button type="submit">Salvar Tema</button>
+    <div class="form-group mt-4">
+        <label for="Name">Nome do Tema</label>
+        <input asp-for="Name" id="Name" required/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <button class="btn btn-primary mt-4" type="submit">Salvar Tema</button>
 </form>

@@ -6,7 +6,7 @@ public class Theme
 {
     public int Id { get; set; }
     
-    [Required]
+    [Required(ErrorMessage = "O nome do tema é obrigatório.")]
     [MaxLength(150)]
     public string Name { get; set; }
     
