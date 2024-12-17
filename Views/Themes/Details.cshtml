@@ -80,7 +80,10 @@
                         <a asp-action="EditPassage" asp-route-id="@passage.Id" class="btn btn-primary btn-sm">Editar</a>
                         <form asp-action="DeletePassage" method="post" style="display:inline;">
                             <input type="hidden" name="id" value="@passage.Id"/>
-                            <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" onclick="setDeleteId(@passage.Id)">
+                                Excluir
+                            </button>
+
                         </form>
                     </td>
                 </tr>
@@ -93,3 +96,34 @@
         <p>Não há passagens cadastradas para este tema.</p>
     }
 </div>
+
+<!-- Modal de Confirmação de exclusão -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza de que deseja excluir esta passagem?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post">
+                    <input type="hidden" name="id" id="deleteId">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  function setDeleteId(id) {
+    const deleteForm = document.getElementById('deleteForm');
+    const deleteIdInput = document.getElementById('deleteId');
+    deleteIdInput.value = id; // Define o ID no input oculto
+    deleteForm.action = `/Themes/DeletePassage/${id}`; // Define a rota para o formulário
+  }
+</script>

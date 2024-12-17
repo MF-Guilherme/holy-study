@@ -10,8 +10,8 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-custom border-bottom box-shadow mb-3">
+            <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Themes" asp-action="Index">HolyStudy</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -22,11 +22,20 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["Message"] != null)
+            {
+                var messageType = TempData["MessageType"] ?? "info";
+                <div class="alert alert-@messageType fade show auto-dismiss" role="alert">
+                    @TempData["Message"]
+                </div>
+            }
+
+
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-black">
         <div class="container">
             &copy; 2024 - HolyStudy<a asp-area="" asp-controller="Themes"></a>
         </div>
@@ -35,5 +44,20 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        // Aguarda a renderização completa
+        document.addEventListener("DOMContentLoaded", function () {
+            // Seleciona todos os alertas com a classe 'auto-dismiss'
+            const alerts = document.querySelectorAll('.alert.auto-dismiss');
+            alerts.forEach(alert => {
+                // Remove o alerta após 2 segundos
+                setTimeout(() => {
+                    alert.classList.remove('show'); // Esconde gradualmente
+                    setTimeout(() => alert.remove(), 500); // Remove do DOM após o fade
+                }, 2000);
+            });
+        });
+    </script>
+    <script src="~/js/search.js"></script>
 </body>
 </html>
