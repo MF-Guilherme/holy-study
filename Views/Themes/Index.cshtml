@@ -32,19 +32,22 @@
 
 <h2 class="text-center my-5">Meus temas favoritos</h2>
 <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 mb-4">
-    @foreach (var theme in Model.Where(t => t.IsFavorite))
+    @if (@ViewBag.FavoriteThemes != null)
     {
-        <div class="col">
-            <div class="card h-100 bg-warning bg-gradient text-dark">
-                <div class="card-body">
-                    <h5 class="card-title text-center">@theme.Name</h5>
-                </div>
-                <div class="card-footer text-center">
-                    <a href="@Url.Action("Details", "Themes", new { id = theme.Id })" class="btn btn-dark btn-sm btn-index">
-                        Ver Passagens
-                    </a>
+        @foreach (var theme in @ViewBag.FavoriteThemes)
+        {
+            <div class="col">
+                <div class="card h-100 bg-warning bg-gradient text-dark">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">@theme.Name</h5>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="@Url.Action("Details", "Themes", new { id = theme.Id })" class="btn btn-dark btn-sm btn-index">
+                            Ver Passagens
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     }
 </div>

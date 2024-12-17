@@ -17,16 +17,19 @@ public class ThemesController : Controller
     // Página inicial
     public async Task<IActionResult> Index()
     {
+        var allThemes = await _context.Themes
+            .OrderBy(t => t.Name)
+            .ToListAsync();
+        
         var favoriteThemes = await _context.Themes
+            .Where(t => t.IsFavorite)
             .OrderBy(t => t.Name)
+            .Take(8)
             .ToListAsync();
+        
+        ViewBag.FavoriteThemes = favoriteThemes;
 
-        // Buscar todos os temas para o dropdown
-        ViewBag.AllThemes = await _context.Themes
-            .OrderBy(t => t.Name)
-            .ToListAsync();
-
-        return View(favoriteThemes);
+        return View(allThemes);
     }
 
     // Página de conteúdo do tema
