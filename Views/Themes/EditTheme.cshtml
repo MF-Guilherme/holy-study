@@ -1,0 +1,33 @@
+@model HolyStudy.Models.Theme
+
+@{
+    ViewData["Title"] = "Editar Tema";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center">Editar Tema</h1>
+    <hr />
+
+    <form asp-action="EditTheme" asp-controller="Themes" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <!-- Nome do Tema -->
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Nome do Tema</label>
+            <input type="text" asp-for="Name" class="form-control" required />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <!-- Checkbox Favorito -->
+        <div class="form-check mb-3">
+            <input type="checkbox" asp-for="IsFavorite" class="form-check-input" />
+            <label asp-for="IsFavorite" class="form-check-label">Favorito</label>
+        </div>
+
+        <!-- Botões -->
+        <div class="d-flex justify-content-between">
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+    </form>
+</div>
