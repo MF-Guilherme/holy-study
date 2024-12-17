@@ -4,13 +4,28 @@
     ViewData["Title"] = Model.Name;
 }
 
-<h1>@Model.Name</h1>
+<div class="container text-center mb-5">
+    <div class="d-flex justify-content-center align-items-baseline gap-3">
+        <h1 class="m-0">@Model.Name</h1>
+        <a href="@Url.Action("Edit", "Themes", new { id = Model.Id })"
+           style="text-decoration: none;">
+            <i class="fa-regular fa-pen-to-square" style="color: #006EFF; font-size: 1rem;"></i>
+        </a>
+        <a href="#" style="text-decoration: none;"
+           data-bs-toggle="modal"
+           data-bs-target="#deleteThemeConfirmationModal"
+           onclick="setThemeDeleteId(@Model.Id)">
+            <i class="fa-solid fa-trash-can" style="color: #ff0000; font-size: 1rem;"></i>
+        </a>
+    </div>
+</div>
 
-<div>
-    <h2>Adicionar Passagem</h2>
-    <form asp-action="AddPassage" method="post" class="row row-cols-lg-auto g-3 align-items-center">
+<div class="container mb-5">
+    <h3>Adicionar Passagem</h3>
+    <form asp-action="Create" asp-controller="Passages" method="post" class="d-flex align-items-center gap-3 flex-wrap">
         <input type="hidden" name="ThemeId" value="@Model.Id" />
-        <div class="col-sm">
+
+        <div class="flex-grow-1">
             <label for="BookId">Livro</label>
             <select class="form-select" name="BookId" id="BookId">
                 <option value="" selected>Selecione o livro</option>
@@ -20,76 +35,81 @@
                 }
             </select>
         </div>
-        <div class="col-sm">
+        <div class="flex-grow-1">
             <label for="Chapter">Capítulo</label>
             <input type="number" class="form-control" id="Chapter" name="Chapter" required/>
         </div>
-        <div class="col-sm">
+        <div class="flex-grow-1">
             <label for="StartVerse">Versículo Inicial</label>
             <input type="number" class="form-control" id="StartVerse" name="StartVerse" required/>
         </div>
-        <div class="col-sm">
+        <div class="flex-grow-1">
             <label for="EndVerse">Versículo Final (opcional)</label>
             <input type="number" class="form-control" id="EndVerse" name="EndVerse">
         </div>
-        <div class="col-sm">
+        <div class="flex-grow-1">
             <label for="Description">Descrição (opcional)</label>
             <textarea class="form-control" id="Description" name="Description"></textarea>
         </div>
-        <div class="col-sm">
-            <button type="submit" class="btn btn-primary">Adicionar</button>
+        <div class="flex-grow-1">
+            <button type="submit" class="btn btn-primary w-100">Adicionar</button>
         </div>
     </form>
 </div>
 
-<hr />
-
-<div>
-    <h2>Passagens Relacionadas</h2>
+<div class="container">
+    <hr />
+</div>
+<div class="container mt-5">
+    <h3 class="mb-4">Passagens Relacionadas</h3>
     @if (Model.Passages != null && Model.Passages.Any())
     {
-        <table class="table table-hover text-center">
-            <thead>
-            <tr>
-                <th>Livro</th>
-                <th>Capítulo</th>
-                <th>Versículos</th>
-                <th>Descrição</th>
-                <th>Ações</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var passage in Model.Passages)
-            {
+        <div class="table-responsive">
+            <table class="table table-hover table-light table-bordered text-center">
+                <thead class="table-primary">
                 <tr>
-                    <td>@passage.Book.Name</td>
-                    <td>@passage.Chapter</td>
-                    @if (passage.EndVerse == null)
-                    {
-                        <td>@passage.StartVerse</td>
-                    }
-                    else
-                    {
-                        <td>@passage.StartVerse - @passage.EndVerse</td>
-                    }
-                    <td style="max-width: 150px; text-align: justify; word-wrap: break-word; white-space: normal;">
-                        @passage.Description
-                    </td>
-
-                    <td>
-                        <a asp-action="EditPassage" asp-route-id="@passage.Id" class="btn btn-primary btn-sm">Editar</a>
-                        <form asp-action="DeletePassage" method="post" style="display:inline;">
-                            <input type="hidden" name="id" value="@passage.Id"/>
-                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" onclick="setDeleteId(@passage.Id)">
-                                Excluir
-                            </button>
-
-                        </form>
-                    </td>
+                    <th>Livro</th>
+                    <th>Capítulo</th>
+                    <th>Versículos</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
                 </tr>
-            }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                @foreach (var passage in Model.Passages)
+                {
+                    <tr>
+                        <td>@passage.Book.Name</td>
+                        <td>@passage.Chapter</td>
+                        <td>
+                            @if (passage.EndVerse == null)
+                            {
+                                @passage.StartVerse
+                            }
+                            else
+                            {
+                                @($"{passage.StartVerse} - {passage.EndVerse}")
+                            }
+                        </td>
+                        <td class="description-column">
+                            @passage.Description
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a asp-action="Edit" asp-controller="Passages" asp-route-id="@passage.Id" class="btn btn-primary btn-sm">Editar</a>
+                                <button type="button" class="btn btn-danger btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteConfirmationModal"
+                                        onclick="setDeletePassageId(@passage.Id)">
+                                    Excluir
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
     }
     else
     {
@@ -97,21 +117,40 @@
     }
 </div>
 
-<!-- Modal de Confirmação de exclusão -->
+<!-- Modais de Confirmação -->
 <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmar Exclusão</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 Tem certeza de que deseja excluir esta passagem?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form id="deleteForm" method="post">
-                    <input type="hidden" name="id" id="deleteId">
+                <form id="deletePassageForm" method="post">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteThemeConfirmationModal" tabindex="-1" aria-labelledby="deleteThemeConfirmationModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza de que deseja excluir este tema?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteThemeForm" method="post">
                     <button type="submit" class="btn btn-danger">Excluir</button>
                 </form>
             </div>
@@ -120,10 +159,13 @@
 </div>
 
 <script>
-  function setDeleteId(id) {
-    const deleteForm = document.getElementById('deleteForm');
-    const deleteIdInput = document.getElementById('deleteId');
-    deleteIdInput.value = id; // Define o ID no input oculto
-    deleteForm.action = `/Themes/DeletePassage/${id}`; // Define a rota para o formulário
-  }
+    function setDeletePassageId(id) {
+        const deleteForm = document.getElementById('deletePassageForm');
+        deleteForm.action = `/Passages/Delete/${id}`;
+    }
+
+    function setThemeDeleteId(id) {
+        const deleteThemeForm = document.getElementById('deleteThemeForm');
+        deleteThemeForm.action = `/Themes/Delete/${id}`;
+    }
 </script>

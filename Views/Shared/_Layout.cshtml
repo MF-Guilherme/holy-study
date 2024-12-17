@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,57 +7,55 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HolyStudy.styles.css" asp-append-version="true" />
+    <link rel="icon" href="~/images/logo/holy-study.png" type="image/x-icon">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-custom border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Themes" asp-action="Index">HolyStudy</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @if (TempData["Message"] != null)
-            {
-                var messageType = TempData["MessageType"] ?? "info";
-                <div class="alert alert-@messageType fade show auto-dismiss" role="alert">
-                    @TempData["Message"]
-                </div>
-            }
-
-
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-black">
+<header>
+    <nav class="navbar-g navbar-custom border-bottom box-shadow mb-3">
         <div class="container">
-            &copy; 2024 - HolyStudy<a asp-area="" asp-controller="Themes"></a>
+            <a class="navbar-brand" asp-area="" asp-controller="Themes" asp-action="Index">
+                <img src="~/images/logo/holy-study-removebg.png" alt="HolyStudy Logo" class="navbar-logo">
+            </a>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-    <script>
-        // Aguarda a renderização completa
-        document.addEventListener("DOMContentLoaded", function () {
-            // Seleciona todos os alertas com a classe 'auto-dismiss'
-            const alerts = document.querySelectorAll('.alert.auto-dismiss');
-            alerts.forEach(alert => {
-                // Remove o alerta após 2 segundos
-                setTimeout(() => {
-                    alert.classList.remove('show'); // Esconde gradualmente
-                    setTimeout(() => alert.remove(), 500); // Remove do DOM após o fade
-                }, 2000);
-            });
+    </nav>
+</header>
+<div class="container">
+    <main role="main" class="pb-3">
+        @if (TempData["Message"] != null)
+        {
+            var messageType = TempData["MessageType"] ?? "info";
+            <div class="alert alert-@messageType fade show auto-dismiss" role="alert">
+                @TempData["Message"]
+            </div>
+        }
+        @RenderBody()
+    </main>
+</div>
+<footer class="border-top footer text-black">
+    <div class="container">
+        &copy; 2024 - HolyStudy<a asp-area="" asp-controller="Themes"></a>
+    </div>
+</footer>
+<!-- Scripts -->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+<script>
+    // Aguarda a renderização completa
+    document.addEventListener("DOMContentLoaded", function () {
+        // Seleciona todos os alertas com a classe 'auto-dismiss'
+        const alerts = document.querySelectorAll('.alert.auto-dismiss');
+        alerts.forEach(alert => {
+            // Remove o alerta após 2 segundos
+            setTimeout(() => {
+                alert.classList.remove('show'); // Esconde gradualmente
+                setTimeout(() => alert.remove(), 500); // Remove do DOM após o fade
+            }, 2000);
         });
-    </script>
-    <script src="~/js/search.js"></script>
+    });
+</script>
+<script src="https://kit.fontawesome.com/c50bbcaba6.js" crossorigin="anonymous"></script>
+<script src="~/js/search.js"></script>
 </body>
 </html>

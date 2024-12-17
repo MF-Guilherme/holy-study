@@ -1,21 +1,18 @@
 @model IEnumerable<Theme>
 
 
-<div class="mb-4 text-center">
-    <div class="row justify-content-between">
-        <div class="col-2">
-            <button class="btn btn-info bg-gradient text-dark me-4" onclick="location.href='@Url.Action("Create", "Themes")'">
-                Crie um novo tema
-            </button>
-        </div>
-        <div class="col-4">
-            <input type="text" class="form-control" id="search" placeholder="Buscar tema..." oninput="filterThemes()" />
-        </div>
+<div class="mb-4">
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-info bg-gradient text-dark me-4" onclick="location.href='@Url.Action("Create", "Themes")'">
+            Crie um novo tema
+        </button>
+        <input type="text" class="form-control w-auto" id="search" placeholder="Buscar tema..." oninput="filterThemes()" />
     </div>
 </div>
 
+
 <h2 class="text-center my-4">Temas estudados</h2>
-<div id="theme-list" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 mt-4 mb-5">
+<div id="theme-list" class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 mt-4 mb-5">
     @foreach (var theme in Model.OrderBy(t => t.Name))
     {
         <div class="col">
@@ -34,20 +31,23 @@
 </div>
 
 <h2 class="text-center my-5">Meus temas favoritos</h2>
-<div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3 mb-4">
-    @foreach (var theme in Model.Where(t => t.IsFavorite))
+<div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 mb-4">
+    @if (@ViewBag.FavoriteThemes != null)
     {
-        <div class="col">
-            <div class="card h-100 bg-warning bg-gradient text-dark">
-                <div class="card-body">
-                    <h5 class="card-title text-center">@theme.Name</h5>
-                </div>
-                <div class="card-footer text-center">
-                    <a href="@Url.Action("Details", "Themes", new { id = theme.Id })" class="btn btn-dark btn-sm btn-index">
-                        Ver Passagens
-                    </a>
+        @foreach (var theme in @ViewBag.FavoriteThemes)
+        {
+            <div class="col">
+                <div class="card h-100 bg-warning bg-gradient text-dark">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">@theme.Name</h5>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="@Url.Action("Details", "Themes", new { id = theme.Id })" class="btn btn-dark btn-sm btn-index">
+                            Ver Passagens
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     }
 </div>

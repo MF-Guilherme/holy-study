@@ -17,17 +17,19 @@ public class ThemesController : Controller
     // Página inicial
     public async Task<IActionResult> Index()
     {
+        var allThemes = await _context.Themes
+            .OrderBy(t => t.Name)
+            .ToListAsync();
+        
         var favoriteThemes = await _context.Themes
+            .Where(t => t.IsFavorite)
             .OrderBy(t => t.Name)
-            .Take(6)
+            .Take(8)
             .ToListAsync();
+        
+        ViewBag.FavoriteThemes = favoriteThemes;
 
-        // Buscar todos os temas para o dropdown
-        ViewBag.AllThemes = await _context.Themes
-            .OrderBy(t => t.Name)
-            .ToListAsync();
-
-        return View(favoriteThemes);
+        return View(allThemes);
     }
 
     // Página de conteúdo do tema
@@ -47,14 +49,13 @@ public class ThemesController : Controller
         return View(theme);
     }
 
-
-// Página de criação de tema (GET)
+    // Página de criação de tema (GET)
     public IActionResult Create()
     {
         return View(new Theme());
     }
 
-// Salva um novo tema (POST)
+    // Salva um novo tema (POST)
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Theme theme)
@@ -68,95 +69,46 @@ public class ThemesController : Controller
             return RedirectToAction(nameof(Details), new { id = theme.Id });
         }
 
-        // Caso a validação falhe, recarrega a página
-        ViewBag.Books = _context.Books.OrderBy(b => b.Id).ToList();
         return View(theme);
     }
 
-    // Adiciona uma passagem ao tema (POST)
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddPassage(Passage passage)
+    // GET: Exibir página de edição
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
     {
-        if (ModelState.IsValid)
-        {
-            _context.Passages.Add(passage);
-            await _context.SaveChangesAsync();
-            TempData["Message"] = "Passagem adicionada com sucesso!";
-            TempData["MessageType"] = "success";
-            return RedirectToAction(nameof(Details), new { id = passage.ThemeId });
-        }
-
-        // Busca o tema e os dados necessários para recarregar a view
-        var theme = await _context.Themes
-            .Include(t => t.Passages)
-            .ThenInclude(p => p.Book)
-            .FirstOrDefaultAsync(t => t.Id == passage.ThemeId);
+        var theme = await _context.Themes.FindAsync(id);
 
         if (theme == null)
         {
             return NotFound();
         }
 
-        ViewBag.Books = await _context.Books.OrderBy(b => b.Name).ToListAsync();
-        return View("Details", theme);
+        return View(theme);
     }
 
-
-    // Exclui uma passagem (POST)
+    // POST: Atualizar tema
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeletePassage(int id)
+    public async Task<IActionResult> Edit(int id, Theme theme)
     {
-        var passage = await _context.Passages.FindAsync(id);
-        if (passage != null)
+        if (id != theme.Id)
         {
-            _context.Passages.Remove(passage);
-            await _context.SaveChangesAsync();
-            TempData["Message"] = "Passagem excluída com sucesso!";
-            TempData["MessageType"] = "success";
-            return RedirectToAction(nameof(Details), new { id = passage.ThemeId });
-
-        }
-        return NotFound();
-    }
-    
-    // GET: Exibir página de edição
-    public async Task<IActionResult> EditPassage(int id)
-    {
-        var passage = await _context.Passages
-            .Include(p => p.Book)
-            .FirstOrDefaultAsync(p => p.Id == id);
-
-        if (passage == null)
-        {
-            return NotFound();
+            return BadRequest("ID do tema não corresponde.");
         }
 
-        // Carrega os livros para o dropdown
-        ViewBag.Books = await _context.Books.OrderBy(b => b.Id).ToListAsync();
-        return View(passage);
-    }
-
-    // POST: Atualizar a passagem
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditPassage(Passage passage)
-    {
         if (ModelState.IsValid)
         {
             try
             {
-                _context.Passages.Update(passage);
+                _context.Themes.Update(theme);
                 await _context.SaveChangesAsync();
-                TempData["Message"] = "Passagem editada com sucesso!";
+                TempData["Message"] = "Tema atualizado com sucesso!";
                 TempData["MessageType"] = "success";
-                // Redireciona de volta para a página de detalhes do tema
-                return RedirectToAction(nameof(Details), new { id = passage.ThemeId });
+                return RedirectToAction(nameof(Details), new { id = theme.Id });
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Passages.Any(p => p.Id == passage.Id))
+                if (!_context.Themes.Any(t => t.Id == id))
                 {
                     return NotFound();
                 }
@@ -164,9 +116,25 @@ public class ThemesController : Controller
             }
         }
 
-        // Caso haja erro, recarrega a página com os dados necessários
-        ViewBag.Books = await _context.Books.OrderBy(b => b.Id).ToListAsync();
-        return View(passage);
+        return View(theme);
     }
 
+    // Excluir tema (POST)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var theme = await _context.Themes.FindAsync(id);
+
+        if (theme != null)
+        {
+            _context.Themes.Remove(theme);
+            await _context.SaveChangesAsync();
+            TempData["Message"] = "Tema excluído com sucesso!";
+            TempData["MessageType"] = "success";
+            return RedirectToAction(nameof(Index));
+        }
+
+        return NotFound();
+    }
 }

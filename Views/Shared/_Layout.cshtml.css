@@ -1,32 +1,18 @@
-﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+﻿/* Estilos personalizados para a navbar */
 
-a.navbar-brand {
-  color: black !important; /* Mesma cor do texto do footer */
+.navbar-g {
+  max-height: 60px;
+  display: flex; /* Torna a navbar um container flex */
+  align-items: center; /* Centraliza os itens verticalmente */
 }
+
 .navbar-custom {
-  background-color: #589de4; /* Mesma cor do footer */
-  color: black; /* Mesma cor do texto do footer */
+  background-color: #b7cbf8; /* Cor da navbar */
+  color: black; /* Cor do texto */
+  text-decoration: none; /* Remove sublinhado */
 }
 
-.navbar-custom .navbar-brand,
-.navbar-custom .navbar-brand:focus,
-.navbar-custom .navbar-brand:hover,
-.navbar-custom .nav-link {
-  color: black !important; /* Supera estilos conflitantes */
-  text-decoration: none; /* Remove sublinhado se existir */
-}
-
-
-.navbar-custom .navbar-brand,
-.navbar-custom .nav-link {
-  color: black; /* Garantir que os textos e links também tenham a mesma cor */
-}
-
-.navbar-custom .nav-link:hover {
-  color: white; /* Cor de destaque ao passar o mouse */
-}
-
+/* Estilo dos botões */
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
@@ -37,6 +23,7 @@ a.navbar-brand {
   width: 100%;
 }
 
+/* Bordas */
 .border-top {
   border-top: 1px solid #e5e5e5;
 }
@@ -44,17 +31,20 @@ a.navbar-brand {
   border-bottom: 1px solid #e5e5e5;
 }
 
+/* Sombras */
 .box-shadow {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
+/* Botão de aceite de política */
 button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
 }
 
+/* Estilo do footer */
 .footer {
-  background-color: #589de4;
+  background-color: #b7cbf8;
   position: absolute;
   bottom: 0;
   width: 100%;
