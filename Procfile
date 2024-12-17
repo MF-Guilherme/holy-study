@@ -1,1 +1,1 @@
-web: dotnet HolyStudy.dll
+web: dotnet publish/HolyStudy.dll

@@ -1,0 +1,67 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+
+.card {
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background-color: #f1f4f6;
+}
+
+
+.navbar-logo {
+  height: 70px; /* Ajuste a altura para um valor menor */
+  width: 100px;  /* Mantém a proporção da imagem */
+  display: inline-block;
+  vertical-align: middle; /* Centraliza verticalmente */
+}
+
+/* Ajusta a largura da coluna de descrição */
+.description-column {
+  max-width: 200px; /* Aumente conforme necessário */
+  min-width: 150px;
+  text-align: justify;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+/* Centraliza os botões de ação na célula */
+.action-buttons {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Alinha verticalmente */
+  gap: 10px; /* Espaçamento entre os botões */
+}
+
+/* Evita quebra desnecessária para botões pequenos */
+.action-buttons a,
+.action-buttons button {
+  flex-shrink: 0;
+}
+
