@@ -7,8 +7,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("HolyStudyConn")));
+// Aqui está o código de configuração que vai verificar se a variável de ambiente "DATABASE_URL" está configurada
+var connectionString = builder.Configuration.GetConnectionString("HolyStudyConn");
+
+// Verifica se a variável de ambiente DATABASE_URL está configurada para produção (Heroku)
+if (string.IsNullOrEmpty(connectionString) && !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DATABASE_URL")))
+{
+    connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+}
+
+// Configuração do DbContext com base na string de conexão
+if (connectionString.Contains("postgres"))
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(connectionString));  // Usando PostgreSQL se a string de conexão for do Heroku
+}
+else
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString));  // Usando SQL Server local
+}
 
 var app = builder.Build();
 
