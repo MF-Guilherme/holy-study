@@ -7,14 +7,14 @@
 <div class="container text-center mb-5">
     <div class="d-flex justify-content-center align-items-baseline gap-3">
         <h1 class="m-0">@Model.Name</h1>
-        <a href="@Url.Action("EditTheme", "Themes", new { id = Model.Id })"
+        <a href="@Url.Action("Edit", "Themes", new { id = Model.Id })"
            style="text-decoration: none;">
             <i class="fa-regular fa-pen-to-square" style="color: #006EFF; font-size: 1rem;"></i>
         </a>
         <a href="#" style="text-decoration: none;"
            data-bs-toggle="modal"
            data-bs-target="#deleteThemeConfirmationModal"
-           onclick="setDeleteId(@Model.Id)">
+           onclick="setThemeDeleteId(@Model.Id)">
             <i class="fa-solid fa-trash-can" style="color: #ff0000; font-size: 1rem;"></i>
         </a>
     </div>
@@ -22,7 +22,7 @@
 
 <div class="container mb-5">
     <h3>Adicionar Passagem</h3>
-    <form asp-action="AddPassage" method="post" class="d-flex align-items-center gap-3 flex-wrap">
+    <form asp-action="Create" asp-controller="Passages" method="post" class="d-flex align-items-center gap-3 flex-wrap">
         <input type="hidden" name="ThemeId" value="@Model.Id" />
 
         <div class="flex-grow-1">
@@ -81,26 +81,28 @@
                     <tr>
                         <td>@passage.Book.Name</td>
                         <td>@passage.Chapter</td>
-                        @if (passage.EndVerse == null)
-                        {
-                            <td>@passage.StartVerse</td>
-                        }
-                        else
-                        {
-                            <td>@passage.StartVerse - @passage.EndVerse</td>
-                        }
+                        <td>
+                            @if (passage.EndVerse == null)
+                            {
+                                @passage.StartVerse
+                            }
+                            else
+                            {
+                                @($"{passage.StartVerse} - {passage.EndVerse}")
+                            }
+                        </td>
                         <td class="description-column">
                             @passage.Description
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a asp-action="EditPassage" asp-route-id="@passage.Id" class="btn btn-primary btn-sm">Editar</a>
-                                <form asp-action="DeletePassage" method="post" style="display:inline;">
-                                    <input type="hidden" name="id" value="@passage.Id" />
-                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" onclick="setDeleteId(@passage.Id)">
-                                        Excluir
-                                    </button>
-                                </form>
+                                <a asp-action="Edit" asp-controller="Passages" asp-route-id="@passage.Id" class="btn btn-primary btn-sm">Editar</a>
+                                <button type="button" class="btn btn-danger btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteConfirmationModal"
+                                        onclick="setDeletePassageId(@passage.Id)">
+                                    Excluir
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -108,7 +110,6 @@
                 </tbody>
             </table>
         </div>
-
     }
     else
     {
@@ -116,22 +117,20 @@
     }
 </div>
 
-
-<!-- Modal de Confirmação de exclusão de passagem -->
+<!-- Modais de Confirmação -->
 <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmar Exclusão</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 Tem certeza de que deseja excluir esta passagem?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form id="deleteForm" method="post">
-                    <input type="hidden" name="id" id="deleteId">
+                <form id="deletePassageForm" method="post">
                     <button type="submit" class="btn btn-danger">Excluir</button>
                 </form>
             </div>
@@ -139,13 +138,12 @@
     </div>
 </div>
 
-<!-- Modal de Confirmação de exclusão de tema -->
 <div class="modal fade" id="deleteThemeConfirmationModal" tabindex="-1" aria-labelledby="deleteThemeConfirmationModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteThemeConfirmationModalLabel">Confirmar Exclusão</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 Tem certeza de que deseja excluir este tema?
@@ -153,7 +151,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <form id="deleteThemeForm" method="post">
-                    <input type="hidden" name="id" id="deleteThemeId">
                     <button type="submit" class="btn btn-danger">Excluir</button>
                 </form>
             </div>
@@ -162,21 +159,13 @@
 </div>
 
 <script>
-    function setDeleteId(id) {
-        const deleteForm = document.getElementById('deleteForm');
-        const deleteIdInput = document.getElementById('deleteId');
-        deleteIdInput.value = id; // Define o ID no input oculto
-        deleteForm.action = `/Themes/DeletePassage/${id}`; // Define a rota para o formulário
+    function setDeletePassageId(id) {
+        const deleteForm = document.getElementById('deletePassageForm');
+        deleteForm.action = `/Passages/Delete/${id}`;
+    }
+
+    function setThemeDeleteId(id) {
+        const deleteThemeForm = document.getElementById('deleteThemeForm');
+        deleteThemeForm.action = `/Themes/Delete/${id}`;
     }
 </script>
-
-<script>
-  function setDeleteId(id) {
-    const deleteForm = document.getElementById('deleteThemeForm');
-    const deleteIdInput = document.getElementById('deleteThemeId');
-    deleteIdInput.value = id; // Define o ID no input oculto
-    deleteForm.action = `/Themes/DeleteTheme/${id}`; // Define a rota para o formulário
-  }
-</script>
-
-

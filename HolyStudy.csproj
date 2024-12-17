@@ -19,4 +19,8 @@
     <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="Views\Passages\EditPassage.cshtml" />
+  </ItemGroup>
+
 </Project>
