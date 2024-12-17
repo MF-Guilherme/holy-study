@@ -5,8 +5,20 @@
 }
 
 <div class="container text-center mb-5">
-    <h1>@Model.Name</h1>
+    <div class="d-flex justify-content-center align-items-baseline gap-3">
+        <h1 class="m-0">@Model.Name</h1>
+        <a href="#" style="text-decoration: none;">
+            <i class="fa-regular fa-pen-to-square" style="color: #006EFF; font-size: 1rem;"></i>
+        </a>
+        <a href="#" style="text-decoration: none;"
+           data-bs-toggle="modal"
+           data-bs-target="#deleteThemeConfirmationModal"
+           onclick="setDeleteId(@Model.Id)">
+            <i class="fa-solid fa-trash-can" style="color: #ff0000; font-size: 1rem;"></i>
+        </a>
+    </div>
 </div>
+
 <div class="container mb-5">
     <h3>Adicionar Passagem</h3>
     <form asp-action="AddPassage" method="post" class="d-flex align-items-center gap-3 flex-wrap">
@@ -104,7 +116,7 @@
 </div>
 
 
-<!-- Modal de Confirmação de exclusão -->
+<!-- Modal de Confirmação de exclusão de passagem -->
 <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -126,11 +138,43 @@
     </div>
 </div>
 
+<!-- Modal de Confirmação de exclusão de tema -->
+<div class="modal fade" id="deleteThemeConfirmationModal" tabindex="-1" aria-labelledby="deleteThemeConfirmationModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteThemeConfirmationModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza de que deseja excluir este tema?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteThemeForm" method="post">
+                    <input type="hidden" name="id" id="deleteThemeId">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setDeleteId(id) {
+        const deleteForm = document.getElementById('deleteForm');
+        const deleteIdInput = document.getElementById('deleteId');
+        deleteIdInput.value = id; // Define o ID no input oculto
+        deleteForm.action = `/Themes/DeletePassage/${id}`; // Define a rota para o formulário
+    }
+</script>
+
+
 <script>
   function setDeleteId(id) {
-    const deleteForm = document.getElementById('deleteForm');
-    const deleteIdInput = document.getElementById('deleteId');
+    const deleteForm = document.getElementById('deleteThemeForm');
+    const deleteIdInput = document.getElementById('deleteThemeId');
     deleteIdInput.value = id; // Define o ID no input oculto
-    deleteForm.action = `/Themes/DeletePassage/${id}`; // Define a rota para o formulário
+    deleteForm.action = `/Themes/DeleteTheme/${id}`; // Define a rota para o formulário
   }
 </script>

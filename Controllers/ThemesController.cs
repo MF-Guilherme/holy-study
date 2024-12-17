@@ -120,6 +120,67 @@ public class ThemesController : Controller
         }
         return NotFound();
     }
+
+    public async Task<IActionResult> EditTheme(int id)
+    {
+        var theme = await _context.Themes.FindAsync(id);
+
+        if (theme == null)
+        {
+            return NotFound(); 
+        }
+        return View(theme);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditTheme(int id, Theme theme)
+    {
+        if (id != theme.Id)
+        {
+            return BadRequest("ID do tema não corresponde");
+        }
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                _context.Attach(theme).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                TempData["Message"] = "Tema editado com sucesso!";
+                TempData["MessageType"] = "success";
+                // Redireciona de volta para a página de detalhes do tema
+                return RedirectToAction(nameof(Details), new { id = theme.Id });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Themes.Any(p => p.Id == theme.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+        }
+        return View(theme);
+    }
+    
+    // Exclui um tema (POST)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteTheme(int id)
+    {
+        var theme = await _context.Themes.FindAsync(id);
+        if (theme != null)
+        {
+            _context.Themes.Remove(theme);
+            await _context.SaveChangesAsync();
+            TempData["Message"] = "Tema excluído com sucesso!";
+            TempData["MessageType"] = "success";
+            return RedirectToAction(nameof(Index));
+
+        }
+        return NotFound();
+    }
+    
     
     // GET: Exibir página de edição
     public async Task<IActionResult> EditPassage(int id)
