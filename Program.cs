@@ -37,6 +37,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString); // SQL Server (Local)
 });
 
+// Adicionar suporte ao Heroku: definir porta a partir de variável de ambiente
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.UseUrls($"http://*:{port}");
+
 var app = builder.Build();
 
 // Configurar o pipeline de requisições HTTP
