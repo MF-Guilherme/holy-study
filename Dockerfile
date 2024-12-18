@@ -1,25 +1,18 @@
-# Imagem base do .NET para build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
+EXPOSE 8080
 
-# Copiar tudo para o container
-COPY . ./
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["HolyStudy.csproj", "./"]
+RUN dotnet restore "HolyStudy.csproj"
+COPY . .
+RUN dotnet build "HolyStudy.csproj" -c Release -o /app/build
 
-# Restaurar dependências
-RUN dotnet restore
+FROM build AS publish
+RUN dotnet publish "HolyStudy.csproj" -c Release -o /app/publish
 
-# Publicar o aplicativo
-RUN dotnet publish -c Release -o out
-
-# Imagem final para execução
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM base AS final
 WORKDIR /app
-
-# Copiar os binários publicados
-COPY --from=build-env /app/out .
-
-# Expor a porta usada pelo seu app
-EXPOSE 5000
-
-# Comando para rodar o aplicativo
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "HolyStudy.dll"]

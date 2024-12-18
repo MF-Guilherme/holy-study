@@ -10,21 +10,31 @@ builder.Configuration.AddEnvironmentVariables();
 // Configuração da string de conexão
 var connectionString = builder.Configuration.GetConnectionString("HolyStudyConn");
 
-// Verifica se a variável de ambiente DATABASE_URL está configurada para produção (Heroku)
-if (string.IsNullOrEmpty(connectionString) && Environment.GetEnvironmentVariable("DATABASE_URL") is string databaseUrl)
+// Verifica se a variável de ambiente DATABASE_URL está configurada (Heroku)
+if (string.IsNullOrEmpty(connectionString))
 {
-    var uri = new Uri(databaseUrl);
-    var userInfo = uri.UserInfo.Split(':');
-    connectionString = $"Host={uri.Host};Port={uri.Port};Username={userInfo[0]};Password={userInfo[1]};Database={uri.AbsolutePath.TrimStart('/')};Pooling=true;SSL Mode=Require;Trust Server Certificate=True";
+    var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+    if (!string.IsNullOrEmpty(databaseUrl))
+    {
+        var uri = new Uri(databaseUrl);
+        var userInfo = uri.UserInfo.Split(':');
+        connectionString = $"Host={uri.Host};Port={uri.Port};Username={userInfo[0]};Password={userInfo[1]};Database={uri.AbsolutePath.TrimStart('/')};Pooling=true;SSL Mode=Require;Trust Server Certificate=True";
+    }
+}
+
+// Lança uma exceção se nenhuma string de conexão for configurada
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("A string de conexão não foi configurada. Verifique as variáveis de ambiente ou o arquivo appsettings.json.");
 }
 
 // Configuração do DbContext com base na string de conexão
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     if (connectionString.Contains("Host=") || connectionString.Contains("postgres"))
-        options.UseNpgsql(connectionString);
+        options.UseNpgsql(connectionString); // PostgreSQL (Heroku)
     else
-        options.UseSqlServer(connectionString);
+        options.UseSqlServer(connectionString); // SQL Server (Local)
 });
 
 var app = builder.Build();
