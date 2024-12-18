@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Adicionar serviços ao contêiner
 builder.Services.AddControllersWithViews();
 builder.Configuration.AddEnvironmentVariables();
 
@@ -30,11 +30,11 @@ else
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configurar o pipeline de requisições HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // O valor padrão de HSTS é 30 dias. Você pode querer mudar isso para cenários de produção, veja https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -45,8 +45,13 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Configurar o endpoint da aplicação
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Themes}/{action=Index}/{id?}");
+
+// Bind para a porta do Heroku (usando variável de ambiente PORT)
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";  // Se a variável PORT não estiver definida, usa 8080 por padrão.
+app.Run($"http://0.0.0.0:{port}");  // Escutando na porta configurada
 
 app.Run();
