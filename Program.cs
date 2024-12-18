@@ -53,5 +53,3 @@ app.MapControllerRoute(
 // Bind para a porta do Heroku (usando variável de ambiente PORT)
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";  // Se a variável PORT não estiver definida, usa 8080 por padrão.
 app.Run($"http://0.0.0.0:{port}");  // Escutando na porta configurada
-
-app.Run();
